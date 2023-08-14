@@ -4,6 +4,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// +genclient
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type ClusterOP struct {
 	metav1.TypeMeta
 	metav1.ObjectMeta
@@ -22,4 +24,7 @@ type NodePool struct {
 	Size  string
 	Name  string
 	Count int
+}
+
+type ClusterList struct {
 }

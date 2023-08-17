@@ -1,0 +1,13 @@
+apiVersion: api.core.clusterop.io/v1alpha1
+kind: Cluster
+metadata:
+  name: cluster-sample
+spec:
+  region: "nyc1"
+  version: "1.21.3-do.0"
+  tokenSecret: "default/dosecret"
+  nodePools:
+    - count: 3
+      name: "dummy-nodepool"
+      size: "s-2vcpu-2gb"
+  # TODO(user): Add fields here

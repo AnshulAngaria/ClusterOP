@@ -18,6 +18,7 @@ package controller
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	corev1 "k8s.io/api/core/v1"
@@ -62,8 +63,6 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		return ctrl.Result{}, err
 	}
 
-	log.Log.Info("Cluster spec that we have is %+v\n", cluster.Spec)
-
 	secretstring := cluster.Spec.TokenSecret
 	secretName := strings.Split(secretstring, "/")[1]
 
@@ -73,12 +72,12 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		return ctrl.Result{}, err
 	}
 
-	clusterID, err := do.Create(secret.Name, cluster.Spec)
+	clusterID, err := do.Create(string(secret.Data["token"]), cluster.Spec)
 	if err != nil {
 		// do something
-		log.Log.Info("errro %s, creating the cluster", err.Error())
+		log.Log.Info(err.Error())
 	}
-	log.Log.Info("cluster id that we have is %s\n", clusterID)
+	log.Log.Info(fmt.Sprintf("cluster id that we have is %s\n", clusterID))
 
 	return ctrl.Result{}, nil
 }

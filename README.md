@@ -28,3 +28,6 @@ A simple kubernetes operator to provision Kubernetes clusters on digital ocean.
           name: "dummy-nodepool"
           size: "s-1vcpu-2gb"
    ```
+
+# TO-DO
+Add support for EKS, GKE and AKS

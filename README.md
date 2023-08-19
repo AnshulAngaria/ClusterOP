@@ -1,4 +1,4 @@
-# ClusterOP [In Progress]
+# ClusterOP [Work In Progress]
 A simple kubernetes operator to provision Kubernetes clusters on digital ocean.
 
 # Steps to create Cluster

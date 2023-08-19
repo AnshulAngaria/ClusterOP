@@ -18,13 +18,17 @@ package controller
 
 import (
 	"context"
+	"strings"
 
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
+	"github.com/AnshulAngaria/ClusterOP/api/v1alpha1"
 	apiv1alpha1 "github.com/AnshulAngaria/ClusterOP/api/v1alpha1"
+	"github.com/AnshulAngaria/ClusterOP/internal/do"
 )
 
 // ClusterReconciler reconciles a Cluster object
@@ -50,6 +54,31 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	_ = log.FromContext(ctx)
 
 	// TODO(user): your logic here
+
+	cluster := &v1alpha1.Cluster{}
+	err := r.Get(ctx, req.NamespacedName, cluster)
+
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
+	log.Log.Info("Cluster spec that we have is %+v\n", cluster.Spec)
+
+	secretstring := cluster.Spec.TokenSecret
+	secretName := strings.Split(secretstring, "/")[1]
+
+	secret := &corev1.Secret{}
+	err = r.Get(ctx, client.ObjectKey{Namespace: req.Namespace, Name: secretName}, secret)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
+	clusterID, err := do.Create(secret.Name, cluster.Spec)
+	if err != nil {
+		// do something
+		log.Log.Info("errro %s, creating the cluster", err.Error())
+	}
+	log.Log.Info("cluster id that we have is %s\n", clusterID)
 
 	return ctrl.Result{}, nil
 }

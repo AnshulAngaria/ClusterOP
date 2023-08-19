@@ -2,20 +2,13 @@ package do
 
 import (
 	"context"
-	"strings"
 
 	"github.com/digitalocean/godo"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/kubernetes"
 
 	"github.com/AnshulAngaria/ClusterOP/api/v1alpha1"
 )
 
-func Create(c kubernetes.Interface, spec v1alpha1.ClusterSpec) (string, error) {
-	token, err := getToken(c, spec.TokenSecret)
-	if err != nil {
-		return "", err
-	}
+func Create(token string, spec v1alpha1.ClusterSpec) (string, error) {
 
 	client := godo.NewFromToken(token)
 
@@ -40,25 +33,33 @@ func Create(c kubernetes.Interface, spec v1alpha1.ClusterSpec) (string, error) {
 	return cluster.ID, nil
 }
 
-func ClusterState(c kubernetes.Interface, spec v1alpha1.ClusterSpec, id string) (string, error) {
-	token, err := getToken(c, spec.TokenSecret)
-	if err != nil {
-		return "", err
-	}
+// func ClusterState(c kubernetes.Interface, spec v1alpha1.ClusterSpec, id string) (string, error) {
+// 	token, err := getToken(c, spec.TokenSecret)
+// 	if err != nil {
+// 		return "", err
+// 	}
 
-	client := godo.NewFromToken(token)
+// 	client := godo.NewFromToken(token)
 
-	cluster, _, err := client.Kubernetes.Get(context.Background(), id)
-	return string(cluster.Status.State), err
-}
+// 	cluster, _, err := client.Kubernetes.Get(context.Background(), id)
+// 	return string(cluster.Status.State), err
+// }
 
-func getToken(client kubernetes.Interface, sec string) (string, error) {
-	namespace := strings.Split(sec, "/")[0]
-	name := strings.Split(sec, "/")[1]
-	s, err := client.CoreV1().Secrets(namespace).Get(context.Background(), name, metav1.GetOptions{})
-	if err != nil {
-		return "", err
-	}
+// func getToken(c *controller.ClusterReconciler, sec string) (string, error) {
+// 	namespace := strings.Split(sec, "/")[0]
+// 	name := strings.Split(sec, "/")[1]
 
-	return string(s.Data["token"]), nil
-}
+// 	secret := &corev1.Secret{}
+
+// 	err := c.List(ctx, secret, client.InNamespace(req.Namespace), client.MatchingLabels(rs.Spec.Template.Labels))
+// 	if err != nil {
+// 		return ctrl.Result{}, err
+// 	}
+
+// 	s, err := client.CoreV1().Secrets(namespace).Get(context.Background(), name, metav1.GetOptions{})
+// 	if err != nil {
+// 		return "", err
+// 	}
+
+// 	return string(s.Data["token"]), nil
+// }

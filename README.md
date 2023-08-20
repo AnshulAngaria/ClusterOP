@@ -1,4 +1,4 @@
-# ClusterOP [Work In Progress]
+# ClusterOP
 A simple kubernetes operator to provision Kubernetes clusters on digital ocean.
 
 # Steps to create Cluster
@@ -30,4 +30,5 @@ A simple kubernetes operator to provision Kubernetes clusters on digital ocean.
    ```
 
 # TO-DO
-Add support for EKS, GKE and AKS
+1. Add Cluster status field
+2. Add support for EKS, GKE and AKS
